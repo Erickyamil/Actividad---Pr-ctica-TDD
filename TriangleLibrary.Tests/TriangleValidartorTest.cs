@@ -5,91 +5,52 @@ namespace TriangleLibrary.Tests;
 
 public class TriangleValidatorTest
 {
-    [Fact]
-    public void IsTriangle_ValidSides_ReturnsTrue()
+    [Theory]
+    [InlineData(3, 4, 5, true)]  // Escaleno válido
+    [InlineData(5, 5, 5, true)]  // Equilátero válido
+    [InlineData(12, 4, 5, false)] // Lados inválidos (no cumple desigualdad)
+    public void IsTriangle_ValidAndInvalidSides_ReturnsExpectedResult(double a, double b, double c, bool expected)
     {
-        // Arrange
-        double a = 3, b = 4, c = 5;
         // Act
         bool result = TriangleValidator.IsTriangle(a, b, c);
+
         // Assert
-        Assert.True(result);
+        Assert.Equal(expected, result);
     }
 
-    [Fact]
-    public void IsTriangle_InvalidSides_ReturnsFalse()
+    [Theory]
+    [InlineData(-1, 2, 2)]
+    [InlineData(0, 3, 4)]
+    [InlineData(double.PositiveInfinity, 2, 2)]
+    public void IsTriangle_InvalidInput_ThrowsArgumentException(double a, double b, double c)
     {
-        // Arrange
-        double a = 12, b = 4, c = 5;
-        // Act
-        bool result = TriangleValidator.IsTriangle(a, b, c);
         // Assert
-        Assert.False(result);
+        Assert.Throws<ArgumentException>(() => TriangleValidator.IsTriangle(a, b, c));
     }
 
-    [Fact]
-    public void IsEquilateral_ValidEquilateral_ReturnsTrue()
+    [Theory]
+    [InlineData(4, 4, 4, true)]  // Equilátero puro
+    [InlineData(3, 4, 4, false)] // Isósceles
+    [InlineData(1, 1, 3, false)] // No es triángulo
+    public void IsEquilateral_Validation(double a, double b, double c, bool expected)
     {
-        // Arrange
-        double a = 4, b = 4, c = 4;
-        // Act
-        bool result = TriangleValidator.IsEquilateral(a, b, c);
-        // Assert
-        Assert.True(result);
+        Assert.Equal(expected, TriangleValidator.IsEquilateral(a, b, c));
     }
 
-    [Fact]
-    public void IsEquilateral_ValidIsosceles_ReturnsFalse()
+    [Theory]
+    [InlineData(5, 5, 3, true)]  // Isósceles puro
+    [InlineData(5, 3, 5, true)]  // Isósceles (lados a y c)
+    [InlineData(5, 5, 5, false)] // Equilátero
+    public void IsIsosceles_Validation(double a, double b, double c, bool expected)
     {
-        // Arrange
-        double a = 3, b = 4, c = 4;
-        // Act
-        bool result = TriangleValidator.IsEquilateral(a, b, c);
-        // Assert
-        Assert.False(result);
+        Assert.Equal(expected, TriangleValidator.IsIsosceles(a, b, c));
     }
 
-    [Fact]
-    public void IsIsosceles_ValidIsosceles_ReturnsTrue()
+    [Theory]
+    [InlineData(3, 4, 5, true)]  // Escaleno puro
+    [InlineData(5, 5, 4, false)] // Isósceles
+    public void IsScalene_Validation(double a, double b, double c, bool expected)
     {
-        // Arrange
-        double a = 5, b = 3, c = 5;
-        // Act
-        bool result = TriangleValidator.IsIsosceles(a, b, c);
-        // Assert
-        Assert.True(result);
-    }
-
-    [Fact]
-    public void IsIsosceles_ValidEquilateral_ReturnsFalse()
-    {
-        // Arrange
-        double a = 5, b = 5, c = 5;
-        // Act
-        bool result = TriangleValidator.IsIsosceles(a, b, c);
-        // Assert
-        Assert.False(result);
-    }
-
-    [Fact]
-    public void IsScalene_ValidScalene_ReturnsTrue()
-    {
-        // Arrange
-        double a = 3, b = 5, c = 4;
-        // Act
-        bool result = TriangleValidator.IsScalene(a, b, c);
-        // Assert
-        Assert.True(result);
-    }
-
-    [Fact]
-    public void IsScalene_ValidIsosceles_ReturnsFalse()
-    {
-        // Arrange
-        double a = 5, b = 5, c = 4;
-        // Act
-        bool result = TriangleValidator.IsScalene(a, b, c);
-        // Assert
-        Assert.False(result);
+        Assert.Equal(expected, TriangleValidator.IsScalene(a, b, c));
     }
 }
